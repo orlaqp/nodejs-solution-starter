@@ -14,14 +14,19 @@ This starter was also designed to work for multitenancy where each tenant is goi
 - Sinon
 - Wallaby
 
+#### Authetication
+(coming soon)
 
-#### App Bootstrap
+#### Authorization
 (coming soon)
 
 #### Middlewares
 (coming soon)
 
 #### Multitenancy
+(coming soon)
+
+#### App Bootstrap
 (coming soon)
 
 ### Testing
