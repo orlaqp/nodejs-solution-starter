@@ -9,13 +9,41 @@ This starter was also designed to work for multitenancy where each tenant is goi
 - NodeJS
 - Graphql
 - MongoDb/Mongoose
+- Typescript
 - Mocha
 - Chai
 - Sinon
 - Wallaby
 
 ### Authetication
-(coming soon)
+
+I know, I know, there are many options out there for authentication (passport.js is a good example) But for this project I wanted to keep it simple and in house. In the future I ay be willing to look at other options but for know token authentication (jwt) is more than enough for my needs. 
+
+I am using the `jsonwebtoken` package to generate unique tokens per user. These tokens contains some details about the logged user. You can inspect the details about the identity looking at the IIdentity interface:
+
+```typescript
+interface IIdentity {
+    firstName: String;
+    middleName: String;
+    lastName: String;
+    username: String;
+    roles: [IRole];
+    permissions: [IPermission];
+    dbUri: String;
+}
+```
+
+*Note:* As you can see is pretty basic and of course the password is not part of the user identity. 
+
+The system have an specific endpoint to generate the tokens at: `POST /auth/token`. I mentioned earlier that this starter project supports multitenancy so you need to pass the tenant when authenticating. For example when you are trying to generate a token you would have to provide the following details:
+
+```
+host: customer.domain.com
+username: username
+password: password
+```
+
+Once the system generates a token it can be used for the next 24h (the expiration time can be configure)
 
 ### Authorization
 (coming soon)
