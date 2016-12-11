@@ -1,5 +1,3 @@
-import { queryBus } from './middlewares/query-bus.middleware';
-import { masterContext } from './middlewares/master-context.middleware';
 import * as express from 'express';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
