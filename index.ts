@@ -1,3 +1,5 @@
+import { queryBus } from './middlewares/query-bus.middleware';
+import { masterContext } from './middlewares/master-context.middleware';
 import * as express from 'express';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
@@ -8,7 +10,7 @@ import run from './playground';
 run();
 
 // middlewares
-import { tokenValidator, accountContext, logger } from './middlewares';
+import { tokenValidator, accountContext, logger, masterContext, mutationBus, queryBus } from './middlewares';
 
 // Routes
 import { auth } from './routes';
@@ -45,12 +47,19 @@ graphQLServer.use(bodyParser.urlencoded({ extended: false }));
 graphQLServer.use(bodyParser.json());
 
 // middlewares
+
 // enable logger
 graphQLServer.use(logger);
+// enable master context
+graphQLServer.use(masterContext);
 // validate tokens
 graphQLServer.use(tokenValidator);
 // this middleware will create a mongodb connection to a customer
 graphQLServer.use(accountContext);
+// enable mutation bus
+graphQLServer.use(mutationBus);
+// enable query bus
+graphQLServer.use(queryBus);
 
 
 const executableSchema = makeExecutableSchema({
