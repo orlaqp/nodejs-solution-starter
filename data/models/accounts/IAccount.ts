@@ -1,4 +1,5 @@
 import mongoose = require('mongoose');
+import * as Promise from 'bluebird';
 
 export interface IPersonalInfo {
     fullname: String;
@@ -35,6 +36,6 @@ export interface IAccountDocument extends IAccount, mongoose.Document {
 }
 
 export interface IAccountModel extends mongoose.Model<IAccountDocument> {
-    createNewAccount(name: String, fullname: String, email: String);
+    createNewAccount(account: IAccount): Promise<IAccount>;
     findAccountByHostname(hostname: String): Promise<IAccountDocument>;
 }

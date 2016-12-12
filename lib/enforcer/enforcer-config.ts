@@ -1,5 +1,5 @@
 import { IIdentity } from '../../data/models';
-import { Activity, ActivityCollection } from './activity';
+import { IActivity, ActivityCollection } from './activity';
 // import { EnforcerConfig } from './enforcer-config';
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
@@ -8,16 +8,16 @@ import * as logger from  'winston';
 export interface IEnforcerConfig {
     allow: (identity, activity, cb: (err, authorized) => void) => void;
     deny: (identity, activity, cb: (err, authorized) => void) => void;
-    activities: Activity[];
-    addActivity(activity: Activity): void;
-    addActivities(activities: Activity[]): void;
+    activities: IActivity[];
+    addActivity(activity: IActivity): void;
+    addActivities(activities: IActivity[]): void;
 }
 
 export class EnforcerConfig implements IEnforcerConfig {
 
     private _allow: (identity, activity, cb: (err, authorized) => void) => void;
     private _deny: (identity, activity, cb: (err, authorized) => void) => void;
-    private _activities: Activity[];
+    private _activities: IActivity[];
 
     constructor() {
         this._activities = [];
@@ -39,11 +39,11 @@ export class EnforcerConfig implements IEnforcerConfig {
         return this._deny;
     }
 
-    get activities(): Activity[] {
+    get activities(): IActivity[] {
         return this._activities;
     }
 
-    addActivity(activity: Activity): void {
+    addActivity(activity: IActivity): void {
         // make sure activity is not empty
         if (!activity) {
             throw new Error('Enfrocer does not allow empty activities');
@@ -55,7 +55,7 @@ export class EnforcerConfig implements IEnforcerConfig {
         this._activities.push(activity);
     }
 
-    addActivities(activities: Activity[]): void {
+    addActivities(activities: IActivity[]): void {
         // dp soe validations before saving the activities
         if (!activities) {
             throw new Error('Enforcer does not allow an empty list of activities');
@@ -64,7 +64,7 @@ export class EnforcerConfig implements IEnforcerConfig {
         activities.forEach((activity) => this.addActivity(activity));
     }
 
-    private _validateActivity(activity: Activity) {
+    private _validateActivity(activity: IActivity) {
         // make sure all activities have at least a:
         // - can
         // - when method or permissions defined

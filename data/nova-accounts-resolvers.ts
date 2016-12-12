@@ -1,8 +1,10 @@
-import { getMasterContext } from './models';
+import { getMasterContext, IAccount } from './models';
+import { ExtendedRequest } from '../middlewares';
+import { CreateAccountMutation } from '.'
 
 const resolvers = {
     Query: {
-        account(_, args) {
+        account(_: ExtendedRequest, args) {
             getMasterContext().then((masterContext) => {
                 return masterContext.Account.findOne(args);
             });
@@ -10,10 +12,9 @@ const resolvers = {
     },
 
     Mutation: {
-        createAccount(_, args) {
-            getMasterContext().then((masterContext) => {
-                return masterContext.Account.createNewAccount(args.name, args.fullname, args.email);
-            });
+        createAccount(_: ExtendedRequest, args) {
+            let mutation = new CreateAccountMutation(_.identity, _.masterContext.Account);
+            _.mutationBus.run<IAccount>('create-account', mutation, args);
         },
     },
 

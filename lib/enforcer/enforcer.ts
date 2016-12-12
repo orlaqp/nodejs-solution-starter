@@ -1,17 +1,27 @@
 import { IIdentity } from '../../data/models';
-import { Activity, ActivityCollection } from './activity';
+import { IActivity, ActivityCollection } from './activity';
 import { IEnforcerConfig } from './enforcer-config';
 import * as Promise from 'bluebird';
 import * as _ from 'lodash';
 import * as logger from  'winston';
 
+export interface IAuthorizationResult {
+    err?: any;
+    authorized?: boolean;
+}
+
 export interface IEnforcer {
-    authorizationTo(activityName: String, cb: (err: any, authorized: Boolean) => void);
+    identity: IIdentity;
+    authorizationTo(activityName: String): Promise<boolean>;
 }
 
 export class Enforcer implements IEnforcer {
 
     private _identity: IIdentity;
+    get identity(): IIdentity {
+        return this._identity;
+    }
+
     private _config: IEnforcerConfig;
 
     constructor(config: IEnforcerConfig, identity: IIdentity) {
@@ -23,45 +33,51 @@ export class Enforcer implements IEnforcer {
         this._identity = identity;
     }
 
-    authorizationTo(activityName: String, cb: (err: any, authorized: Boolean) => void) {
-        logger.debug('Checking allow authorization');
-        // first call the global allow and deny callbacks
-        if (this._config.allow) {
-            this._config.allow(this._identity, activityName, (err, authorized) => {
-                if (err || !authorized) {
-                    cb(err, authorized);
-                    return;
-                }
+    authorizationTo(activityName: String): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            logger.debug('Checking allow authorization');
+            // first call the global allow and deny callbacks
+            if (this._config.allow) {
+                this._config.allow(this._identity, activityName, (err, authorized) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    if (!authorized) {
+                        resolve(authorized);
+                    }
+                });
+            }
+
+            logger.debug('Checking deny authorization');
+            if (this._config.deny) {
+                this._config.deny(this._identity, activityName, (err, deny) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    if (deny) {
+                        resolve(!deny);
+                    }
+                });
+            }
+
+            logger.debug('Checking activity authorization');
+            let activity = _.find(this._config.activities, { may: activityName });
+
+            if (!activity) {
+                reject({err: new Error(`Activity ${activityName} was not found`), authorized: false });
+            }
+            this._checkAuthorization(activity).then((authorized) => {
+                resolve(authorized);
+            }).catch((err) => {
+                reject(err);
             });
-        }
-
-        logger.debug('Checking deny authorization');
-        if (this._config.deny) {
-            this._config.deny(this._identity, activityName, (err, deny) => {
-                if (err || deny) {
-                    cb(err, !deny);
-                    return;
-                }
-            });
-        }
-
-        logger.debug('Checking activity authorization');
-        let activity = _.find(this._config.activities, { may: activityName });
-
-        if (!activity) {
-            cb(new Error(`Activity ${activityName} was not found`), false);
-            return;
-        }
-
-        this._checkAuthorization(activity).then((authorized) => {
-            cb(null, authorized);
-        }).catch((err) => {
-            cb(err, false);
         });
     }
 
-    private _checkAuthorization(activity: Activity): Promise<Boolean> {
-        return new Promise<Boolean>((resolve, reject) => {
+    private _checkAuthorization(activity: IActivity): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
 
             if (!activity) {
                 throw new Error('Cannot check authorization of an empty activity');

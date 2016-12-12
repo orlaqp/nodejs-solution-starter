@@ -1,6 +1,6 @@
 import mongoose = require('mongoose');
 import * as Promise from 'bluebird'
-import { IAccountModel, IAccountDocument } from './IAccount';
+import { IAccountModel, IAccountDocument, IAccount } from './IAccount';
 
 // define mongo schema
 let accountSchema = new mongoose.Schema({
@@ -25,15 +25,7 @@ let accountSchema = new mongoose.Schema({
 });
 
 // static methods
-accountSchema.statics.createNewAccount = function(name, fullname, email) {
-    const account = {
-        name,
-        personalInfo: {
-            fullname,
-            email,
-        },
-    };
-
+accountSchema.statics.createNewAccount = function(account: IAccount) {
     return this.create(account, (err) => {
         console.error(err);
     });
