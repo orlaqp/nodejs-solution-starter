@@ -31,7 +31,7 @@
     "sinon-chai": "^2.8.0",
     "ts-node": "^1.7.0",
     "tslint": "^4.0.0",
-    "typescript": "^2.0.10"
+    "typescript": "^2.1.4"
   },
   "dependencies": {
     "@types/async": "^2.0.34",
