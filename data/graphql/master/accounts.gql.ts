@@ -1,10 +1,10 @@
-
 import { GraphqlDefinition } from '../graphql-definition';
 import { getMasterContext, IAccount } from '../../models';
 import { ExtendedRequest } from '../../../middlewares';
 import { CreateAccountMutation } from '../..';
 
-export const accountsGraphql: GraphqlDefinition = {
+export const accountsGql: GraphqlDefinition = {
+    name: 'accounts',
     schema: {
         types: `
             type PersonalInfo {

@@ -26,14 +26,6 @@ seed();
 // import runPlayground from './playground';
 // runPlayground();
 
-// import makeDefaultConnection from './data/nova-connector';
-import { apolloExpress, graphiqlExpress } from 'apollo-server';
-import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
-
-import { Schema } from './data/nova-accounts-schema';
-import Resolvers from './data/nova-accounts-resolvers';
-// import Mocks from './data/mocks';
-
 const GRAPHQL_PORT = 8081;
 
 const graphQLServer = express();
@@ -60,9 +52,19 @@ graphQLServer.use(mutationBus);
 graphQLServer.use(queryBus);
 
 
+//  GRAPHQL
+
+// import makeDefaultConnection from './data/nova-connector';
+import { apolloExpress, graphiqlExpress } from 'apollo-server';
+import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
+
+import { GraphqlSchema } from './data/graphql/graphql-schema';
+// import Mocks from './data/mocks';
+
+
 const executableSchema = makeExecutableSchema({
-  typeDefs: Schema,
-  resolvers: Resolvers,
+  typeDefs: GraphqlSchema.schema,
+  resolvers: GraphqlSchema.resolvers,
   allowUndefinedInResolve: false,
 //   printErrors: true,
 });

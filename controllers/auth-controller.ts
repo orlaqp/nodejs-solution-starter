@@ -58,7 +58,9 @@ export class AuthController {
 
     private _retrieveUser(username: String): Promise<IUserDocument> {
         return new Promise<IUserDocument>((resolve, reject) => {
-            this._appContext.User.findOne({ username: username })
+            this._appContext.User
+                .findOne({ username: username })
+                .populate('roles', ['name'])
                 .then((user) => resolve(user)
                 , (err) => { throw err });
         });
@@ -84,8 +86,8 @@ export class AuthController {
                 middleName: user.middleName,
                 lastName: user.lastName,
                 username: user.username,
-                roles: [''], // user.roles,
-                permissions: ['p1', 'p2'],
+                // roles: [''], // user.roles,
+                // permissions: ['p1', 'p2'],
                 dbUri: account.getConnectionString()
             };
 

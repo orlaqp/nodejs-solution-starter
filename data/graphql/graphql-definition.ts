@@ -6,6 +6,7 @@ export interface GraphqlSchema {
 
 
 export interface GraphqlDefinition {
+    name: string;
     schema: GraphqlSchema;
     resolvers: any;
 }

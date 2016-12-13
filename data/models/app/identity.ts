@@ -5,7 +5,7 @@ export interface IIdentity {
     middleName: String;
     lastName: String;
     username: String;
-    roles: [IRole];
-    permissions: [IPermission];
+    roles?: [IRole];
+    permissions?: [IPermission];
     dbUri: String;
 }

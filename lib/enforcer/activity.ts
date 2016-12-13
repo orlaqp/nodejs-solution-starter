@@ -5,7 +5,7 @@ import { IIdentity } from '../../data/models';
 export interface IActivity {
     may: String;
     hasPermissions?: IPermission[];
-    when?(identity: IIdentity, cb: (err: any, authorized: Boolean) => void);
+    when?(identity: IIdentity, cb: (err: any, authorized: boolean) => void);
 }
 
 export class ActivityCollection {
