@@ -7,6 +7,10 @@ import run from './playground';
 // run the tests in playground
 run();
 
+// ACTIVITIES
+import { addActivities } from './activities';
+addActivities();
+
 // middlewares
 import { tokenValidator, accountContext, logger, masterContext, mutationBus, queryBus } from './middlewares';
 
@@ -50,6 +54,11 @@ graphQLServer.use(accountContext);
 graphQLServer.use(mutationBus);
 // enable query bus
 graphQLServer.use(queryBus);
+
+
+// ACTIVITIES
+
+
 
 
 //  GRAPHQL
@@ -98,8 +107,3 @@ graphQLServer.use('/graphiql', graphiqlExpress({
 graphQLServer.listen(GRAPHQL_PORT, () => console.log(
     `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}/graphql`
 ));
-
-
-
-
-

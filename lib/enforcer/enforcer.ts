@@ -63,9 +63,11 @@ export class Enforcer implements IEnforcer {
             }
 
             logger.debug('Checking activity authorization');
+
             let activity = _.find(this._config.activities, { may: activityName });
 
             if (!activity) {
+                console.log('activity not found');
                 reject({err: new Error(`Activity ${activityName} was not found`), authorized: false });
             }
             this._checkAuthorization(activity).then((authorized) => {
