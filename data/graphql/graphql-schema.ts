@@ -42,7 +42,7 @@ schema {
 }
 `;
 
-logger.debug('Full gql definition: ' + schema);
+// logger.debug('Full gql definition: ' + schema);
 
 // --- MERGE RESOLVERS
 

@@ -55,12 +55,12 @@ graphQLServer.use(queryBus);
 //  GRAPHQL
 
 // import makeDefaultConnection from './data/nova-connector';
+import { graphqlExpress } from 'graphql-server-express';
 import { apolloExpress, graphiqlExpress } from 'apollo-server';
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
 import { GraphqlSchema } from './data/graphql/graphql-schema';
 // import Mocks from './data/mocks';
-
 
 const executableSchema = makeExecutableSchema({
   typeDefs: GraphqlSchema.schema,
@@ -75,14 +75,18 @@ const executableSchema = makeExecutableSchema({
 //   preserveResolvers: true,
 // });
 
-
 // Routes
 graphQLServer.use('/auth', auth);
 
 // `context` must be an object and can't be undefined when using connectors
-graphQLServer.use('/graphql', bodyParser.json(), apolloExpress((req) => ({
-  schema: executableSchema,
+// graphQLServer.use('/graphql', apolloExpress((req) => ({
+//   schema: executableSchema,
+//   context: req,
+// })));
+
+graphQLServer.use('/graphql', bodyParser.json(), graphqlExpress((req) => ({
   context: req,
+  schema: executableSchema
 })));
 
 graphQLServer.use('/graphiql', graphiqlExpress({

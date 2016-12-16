@@ -80,7 +80,7 @@ let _enforcerConfig: EnforcerConfig = null;
 
 export function getEnforcerConfig() {
     if (!_enforcerConfig) {
-        _enforcerConfig = new EnforcerConfig()
+        _enforcerConfig = new EnforcerConfig();
     }
 
     return _enforcerConfig;

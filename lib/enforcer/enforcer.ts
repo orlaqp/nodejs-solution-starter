@@ -25,8 +25,8 @@ export class Enforcer implements IEnforcer {
     private _config: IEnforcerConfig;
 
     constructor(config: IEnforcerConfig, identity: IIdentity) {
-        if (!config || !identity) {
-            throw new Error('An enforcer instance requires config information and an identity');
+        if (!config) {
+            throw new Error('An enforcer instance requires config information');
         }
 
         this._config = config;

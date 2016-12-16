@@ -2,6 +2,7 @@ import { GraphqlDefinition } from '../graphql-definition';
 import { getMasterContext, IAccount } from '../../models';
 import { ExtendedRequest } from '../../../middlewares';
 import { CreateAccountMutation } from '../..';
+import * as logger from 'winston';
 
 export const accountsGql: GraphqlDefinition = {
     name: 'accounts',
@@ -35,17 +36,17 @@ export const accountsGql: GraphqlDefinition = {
 
     resolvers: {
         Query: {
-            account(_: ExtendedRequest, args) {
-                getMasterContext().then((masterContext) => {
+            account(root: any, args, context: ExtendedRequest) {
+                return getMasterContext().then((masterContext) => {
                     return masterContext.Account.findOne(args);
                 });
             },
         },
 
         Mutation: {
-            createAccount(_: ExtendedRequest, args) {
-                let mutation = new CreateAccountMutation(_.identity, _.masterContext.Account);
-                _.mutationBus.run<IAccount>('create-account', mutation, args);
+            createAccount(root: any, args, context: ExtendedRequest) {
+                let mutation = new CreateAccountMutation(context.identity, context.masterContext.Account);
+                context.mutationBus.run<IAccount>('create-account', mutation, args);
             },
         },
 

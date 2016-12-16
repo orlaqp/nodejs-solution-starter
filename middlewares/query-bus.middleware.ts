@@ -6,5 +6,5 @@ import { Response } from 'express';
  * the current request
  */
 export function queryBus(req: ExtendedRequest, res: Response, next) {
-
+    next();
 }
