@@ -40,10 +40,6 @@ export const accountsGql: GraphqlDefinition = {
                 let query = new GetAccountQuery(context.identity, context.masterContext.Account);
                 return context.queryBus.run<IAccount>('get-account', query, args)
                     .then((account) => account, (err) => err);
-
-                // return getMasterContext().then((masterContext) => {
-                //     return masterContext.Account.findOne(args);
-                // });
             },
         },
 
@@ -57,16 +53,16 @@ export const accountsGql: GraphqlDefinition = {
         Account: {
             personalInfo(account) {
                 return {
-                    fullname: account.personalInfo.fullname,
-                    email: account.personalInfo.email,
+                    fullname: account.personalInfo.fullname || '',
+                    email: account.personalInfo.email || '',
                 };
             },
 
             businessInfo(account) {
                 return {
-                    numberOfLocations: account.businessInfo.numberOfLocations,
-                    country: account.businessInfo.country,
-                    phoneNumber: account.businessInfo.phoneNumber,
+                    numberOfLocations: account.businessInfo.numberOfLocations || '',
+                    country: account.businessInfo.country || '',
+                    phoneNumber: account.businessInfo.phoneNumber || '',
                 };
             },
         },
